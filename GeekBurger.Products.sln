@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeekBurger.Products", "GeekBurger.Products\GeekBurger.Products.csproj", "{ABA2D391-5C7E-4BDF-99AC-3431C32F1B09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeekBurger.Products.Contract", "GeekBurger.Products.Contract\GeekBurger.Products.Contract.csproj", "{BB0BDFD3-41CB-46DC-AE68-3D7FC74F4BA5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeekBurger.Products.Contract", "GeekBurger.Products.Contract\GeekBurger.Products.Contract.csproj", "{BB0BDFD3-41CB-46DC-AE68-3D7FC74F4BA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
