@@ -2,6 +2,7 @@
 using GeekBurger.Products.Contract;
 using GeekBurger.Products.Model;
 using GeekBurger.Products.Repository;
+using Microsoft.Azure.Management.ServiceBus.Fluent;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -18,23 +19,38 @@ namespace GeekBurger.Products.Service
 {
     public class ProductChangedService : IProductChangedService
     {
+        private const string Topic = "ProductChangedTopic";
         private IConfiguration _configuration;
         private IMapper _mapper;
         private List<Message> _messages;
         private Task _lastTask;
+        private IServiceBusNamespace _namespace;
 
         public ProductChangedService(IMapper mapper, IConfiguration configuration)
         {
             _mapper = mapper;
             _configuration = configuration;
             _messages = new List<Message>();
+            _namespace = _configuration.GetServiceBusNamespace();
+            EnsureTopicIsCreated();
         }
+
+        public void EnsureTopicIsCreated()
+        {
+            if (!_namespace.Topics.List()
+                .Any(topic => topic.Name
+                    .Equals(Topic, StringComparison.InvariantCultureIgnoreCase)))
+                _namespace.Topics.Define(Topic)
+                    .WithSizeInMB(1024).Create();
+
+        }
+
         public void AddToMessageList(IEnumerable<EntityEntry<Product>> changes)
         {
             _messages.AddRange(changes
             .Where(entity => entity.State != EntityState.Detached
                     && entity.State != EntityState.Unchanged)
-            .Select(entity => GetMessage(entity)).ToList());
+            .Select(GetMessage).ToList());
         }
 
         public Message GetMessage(EntityEntry<Product> entity)
@@ -51,46 +67,47 @@ namespace GeekBurger.Products.Service
             };
         }
 
-public async void SendMessagesAsync()
-{
-    if (_lastTask != null && !_lastTask.IsCompleted)
-        return;
+        public async void SendMessagesAsync()
+        {
+            if (_lastTask != null && !_lastTask.IsCompleted)
+                return;
 
-    var connectionString = _configuration["connectionStrings:serviceBusConnectionString"];
-    var queueClient = new QueueClient(connectionString, "ProductChanged");
+            var config = _configuration.GetSection("serviceBus").Get<ServiceBusConfiguration>();
+            var topicClient = new TopicClient(config.ConnectionString, Topic);
+            
+            _lastTask = SendAsync(topicClient);
 
-    _lastTask = SendAsync(queueClient);
+            await _lastTask;
 
-    await _lastTask;
-
-    var closeTask = queueClient.CloseAsync();
-    await closeTask;
-    HandleException(closeTask);
-}
-
-public async Task SendAsync(QueueClient queueClient)
-{
-    int tries = 0;
-    Message message;
-    while (true)
-    {
-        if (_messages.Count <= 0)
-            break;
-
-        lock (_messages) {
-            message = _messages.FirstOrDefault();
+            var closeTask = topicClient.CloseAsync();
+            await closeTask;
+            HandleException(closeTask);
         }
 
-        var sendTask = queueClient.SendAsync(message);
-        await sendTask;
-        var success = HandleException(sendTask);
+        public async Task SendAsync(TopicClient topicClient)
+        {
+            int tries = 0;
+            Message message;
+            while (true)
+            {
+                if (_messages.Count <= 0)
+                    break;
 
-        if (!success) 
-            Thread.Sleep(10000 * (tries<60?tries++:tries));
-        else
-            _messages.Remove(message);
-    }
-}
+                lock (_messages)
+                {
+                    message = _messages.FirstOrDefault();
+                }
+
+                var sendTask = topicClient.SendAsync(message);
+                await sendTask;
+                var success = HandleException(sendTask);
+
+                if (!success)
+                    Thread.Sleep(10000 * (tries < 60 ? tries++ : tries));
+                else
+                    _messages.Remove(message);
+            }
+        }
 
         public bool HandleException(Task task)
         {
