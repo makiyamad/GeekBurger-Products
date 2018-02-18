@@ -1,0 +1,62 @@
+[
+    {
+        "storeId": "8048e9ec-80fe-4bad-bc2a-e4f4a75c834e",
+        "productId": "c7a85031-fd7a-4547-8309-05e6f770685d",
+        "name": "Darth Bacon",
+        "image": "hamb1.png",
+        "items": [
+            {
+                "itemId": "2a96dcba-8fb1-479d-8355-54e8d4c43fd9",
+                "name": "beef"
+            },
+            {
+                "itemId": "cfc9d720-6924-4503-bb82-0560e09ab57e",
+                "name": "ketchup"
+            },
+            {
+                "itemId": "dc821f3f-de83-49b1-8f5e-0f3975b97ffc",
+                "name": "bread"
+            }
+        ]
+    },
+    {
+        "storeId": "8048e9ec-80fe-4bad-bc2a-e4f4a75c834e",
+        "productId": "e7d6d551-487a-48cf-87bf-21a61a234019",
+        "name": "Cap. Spork",
+        "image": "hamb2.png",
+        "items": [
+            {
+                "itemId": "2ff5a192-85ea-4ce6-91a4-9b4c84bb0448",
+                "name": "pork"
+            },
+            {
+                "itemId": "29ba7251-0338-41be-aef5-e2b5c1c8fbb2",
+                "name": "mustard"
+            },
+            {
+                "itemId": "31d90388-609a-4c72-bafa-b06891c4f825",
+                "name": "whole bread"
+            }
+        ]
+    },
+    {
+        "storeId": "8d618778-85d7-411e-878b-846a8eef30c0",
+        "productId": "7d28fe9e-6790-416a-84c3-1f680a8922bf",
+        "name": "Beef Turner",
+        "image": "hamb3.png",
+        "items": [
+            {
+                "itemId": "939539b7-38f0-44bb-ad99-a31d3cecce45",
+                "name": "beef"
+            },
+            {
+                "itemId": "9feca903-9b97-4b71-a99a-a0bdd5cf9b9f",
+                "name": "mustard"
+            },
+            {
+                "itemId": "7dde88f7-5b43-4907-84d0-2e6a1c2d647f",
+                "name": "bread"
+            }
+        ]
+    }	
+]

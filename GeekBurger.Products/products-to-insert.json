@@ -1,0 +1,50 @@
+[
+    {
+		"storename": "Los Angeles - Pasadena",
+        "name": "Darth Bacon",
+        "image": "hamb1.png",
+        "items": [
+            {
+                "name": "beef"
+            },
+            {
+                "name": "mustard"
+            },
+            {
+                "name": "bread"
+            }
+        ]
+    },
+    {
+		"storename": "Los Angeles - Pasadena",
+        "name": "Cap. Spork",
+        "image": "hamb2.png",
+        "items": [
+            {
+                "name": "pork"
+            },
+            {
+                "name": "mustard"
+            },
+            {
+                "name": "whole bread"
+            }
+        ]
+    },
+    {
+		"storename": "Los Angeles - Beverly Hills",
+        "name": "Beef Turner",
+        "image": "hamb3.png",
+        "items": [
+            {
+                "name": "beef"
+            },
+            {
+                "name": "ketchup"
+            },
+            {
+                "name": "bread"
+            }
+        ]
+    }	
+]

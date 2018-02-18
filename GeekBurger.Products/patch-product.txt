@@ -1,0 +1,8 @@
+[
+  { "op": "add", "path": "/storeId", "value": "8048e9ec-80fe-4bad-bc2a-e4f4a75c834e" },
+  { "op": "add", "path": "/name", "value": "Darth Bacon 1" },
+  { "op": "add", "path": "/image", "value": "hamb1.png" },  
+  { "op": "add", "path": "/items/name", "value": "beef" },
+  { "op": "add", "path": "/items/name", "value": "ketchup" },
+  { "op": "add", "path": "/items/name", "value": "bread" } 
+]

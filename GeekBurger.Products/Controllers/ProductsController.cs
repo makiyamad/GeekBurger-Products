@@ -2,58 +2,37 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using GeekBurger.Products.Contract;
+using GeekBurger.Products.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GeekBurger.Products.Controllers
 {
+
     [Route("api/products")]
     public class ProductsController : Controller
     {
-        private List<Product> Products;
+        private IProductsRepository _productsRepository;
+        private IMapper _mapper;
 
-        public ProductsController()
+        public ProductsController(IProductsRepository productsRepository, IMapper mapper)
         {
-            var losAngelesStore = new Guid("8048e9ec-80fe-4bad-bc2a-e4f4a75c834e");
-            var beverlyHillsStore = new Guid("8d618778-85d7-411e-878b-846a8eef30c0");
-
-            var beef = Guid.NewGuid();
-            var mustard = Guid.NewGuid();
-            var bread = Guid.NewGuid();
-
-            Products =
-                new List<Product>()
-                {
-            new Product { ProductId = Guid.NewGuid(), Name = "Darth Bacon",
-                Image = "hamb1.png", StoreId = losAngelesStore,
-                Items = new List<Item> {new Item { ItemId = beef, Name = "beef"},
-                    new Item { ItemId = Guid.NewGuid(), Name = "ketchup" },
-                    new Item { ItemId = bread, Name = "bread" } }
-            },
-            new Product { ProductId = Guid.NewGuid(), Name = "Cap. Spork",
-                Image = "hamb2.png", StoreId = losAngelesStore,
-                Items = new List<Item> {new Item { ItemId = Guid.NewGuid(), Name = "pork"},
-                    new Item { ItemId = mustard, Name = "mustard" },
-                    new Item { ItemId = Guid.NewGuid(), Name = "whole bread" } }
-            },
-            new Product { ProductId = Guid.NewGuid(), Name = "Beef Turner",
-                Image = "hamb3.png", StoreId = beverlyHillsStore,
-                Items = new List<Item> {new Item { ItemId = beef, Name = "beef"},
-                    new Item { ItemId = mustard, Name = "mustard" },
-                    new Item { ItemId = bread, Name = "bread" } }
-            }
-                };
+            _productsRepository = productsRepository;
+            _mapper = mapper;
         }
 
-        [HttpGet("{storeid}")]
-        public IActionResult GetProductsByStoreId(Guid storeId)
+        [HttpGet()]
+        public IActionResult GetProductsByStoreName([FromQuery] string storeName)
         {
-            var productsByStore = Products.Where(product => product.StoreId == storeId).ToList();
+            var productsByStore = _productsRepository.GetProductsByStoreName(storeName).ToList();
 
             if (productsByStore.Count <= 0)
                 return NotFound();
 
-            return Ok(productsByStore);
+            var productsToGet = _mapper.Map<IEnumerable<ProductToGet>>(productsByStore);
+
+            return Ok(productsToGet);
         }
     }
 }
