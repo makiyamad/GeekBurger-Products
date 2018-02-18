@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace GeekBurger.Products
 {
@@ -26,12 +27,12 @@ namespace GeekBurger.Products
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            var mvcCoreBuilder = services.AddMvcCore();
+            var mvcCoreBuilder = services.AddMvc();
 
-            mvcCoreBuilder
-                .AddFormatterMappings()
-                .AddJsonFormatters()
-                .AddCors();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Products", Version = "v1" });
+            });
 
             services.AddAutoMapper();
 
@@ -50,6 +51,13 @@ namespace GeekBurger.Products
             }
 
             app.UseMvc();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             productsContext.Seed();
         }
