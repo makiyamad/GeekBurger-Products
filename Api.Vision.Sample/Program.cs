@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.ProjectOxford.Vision;
+using Microsoft.ProjectOxford.Vision.Contract;
 using System;
 using System.IO;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Api.Vision.Sample
     class Program
     {
         public static IConfiguration Configuration;
-        public static string[] blacklist = new string[] 
+        public static string[] blacklist = new string[]
             { "ingredients", "processed in a facility that handles", "products" , "allergens" , "contains" };
         public const string AndWithSpace = " and ";
         public const string CommaWithSpace = " , ";
@@ -26,7 +27,7 @@ namespace Api.Vision.Sample
             var visionServiceClient =
                 new VisionServiceClient(Configuration["VisionAPIKey"],
                 "https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/");
-            
+
             while (true)
             {
                 Console.WriteLine("Detect Ingredients on label images. Type the image name and hit enter");
@@ -47,36 +48,36 @@ namespace Api.Vision.Sample
                 }
 
                 if (command.Equals(Exit)) break;
-
+                OcrResults results;
                 using (Stream imageFileStream = File.OpenRead(imageFilePath))
                 {
-                    var results = visionServiceClient.RecognizeTextAsync(imageFileStream).Result;
-
-                    var lines = results.Regions.SelectMany(region => region.Lines);
-                    var words = lines.SelectMany(line => line.Words);
-                    var wordsText = words.Select(word => word.Text.ToUpper());
-
-                    var wordsJoint = string.Join(' ', wordsText)
-                        .Replace(AndWithSpace, CommaWithSpace, StringComparison.InvariantCultureIgnoreCase);
-
-                    foreach (var item in blacklist)
-                    {
-                        wordsJoint = wordsJoint.Replace(item, ",", StringComparison.InvariantCultureIgnoreCase);
-                    }
-
-                    var wordsSplitByComma = wordsJoint.Split(',').ToList();
-
-                    Console.WriteLine("Ingredients:");
-                    wordsSplitByComma
-                        .Distinct()
-                        .ToList()
-                        .ForEach(wordText =>
-                    {
-                        var text = wordText.RemoveSpecialCharacters().Trim();
-                        if (!String.IsNullOrWhiteSpace(text))
-                            Console.WriteLine(text);
-                    });
+                    results = visionServiceClient.RecognizeTextAsync(imageFileStream).Result;
                 }
+                var lines = results.Regions.SelectMany(region => region.Lines);
+                var words = lines.SelectMany(line => line.Words);
+                var wordsText = words.Select(word => word.Text.ToUpper());
+
+                var wordsJoint = string.Join(' ', wordsText)
+                    .Replace(AndWithSpace, CommaWithSpace, StringComparison.InvariantCultureIgnoreCase);
+
+                foreach (var item in blacklist)
+                {
+                    wordsJoint = wordsJoint.Replace(item, ",", StringComparison.InvariantCultureIgnoreCase);
+                }
+
+                var wordsSplitByComma = wordsJoint.Split(',').ToList();
+
+                Console.WriteLine("Ingredients:");
+                wordsSplitByComma
+                    .Distinct()
+                    .ToList()
+                    .ForEach(wordText =>
+                {
+                    var text = wordText.RemoveSpecialCharacters().Trim();
+                    if (!String.IsNullOrWhiteSpace(text))
+                        Console.WriteLine(text);
+                });
+
             }
         }
     }
