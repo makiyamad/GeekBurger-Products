@@ -9,5 +9,7 @@ namespace GeekBurger.Products.Contract
         public string Name { get; set; }
         public string Image { get; set; }
         public List<ItemToUpsert> Items { get; set; }
+
+        public decimal Price { get; set; }
     }
 }

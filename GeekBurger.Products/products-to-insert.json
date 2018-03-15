@@ -1,50 +1,208 @@
 [
-    {
-		"storename": "Los Angeles - Pasadena",
-        "name": "Darth Bacon",
-        "image": "hamb1.png",
-        "items": [
-            {
-                "name": "beef"
-            },
-            {
-                "name": "mustard"
-            },
-            {
-                "name": "bread"
-            }
-        ]
-    },
-    {
-		"storename": "Los Angeles - Pasadena",
-        "name": "Cap. Spork",
-        "image": "hamb2.png",
-        "items": [
-            {
-                "name": "pork"
-            },
-            {
-                "name": "mustard"
-            },
-            {
-                "name": "whole bread"
-            }
-        ]
-    },
-    {
-		"storename": "Los Angeles - Beverly Hills",
-        "name": "Beef Turner",
-        "image": "hamb3.png",
-        "items": [
-            {
-                "name": "beef"
-            },
-            {
-                "name": "ketchup"
-            },
-            {
-                "name": "bread"
-            }
-        ]
-    }	
+  {
+    "storename": "Los Angeles - Pasadena",
+    "name": "Darth Bacon",
+    "image": "hamb1.png",
+	"price": 2.5,
+    "items": [
+      {
+        "name": "beef"
+      },
+      {
+        "name": "ketchup"
+      },
+      {
+        "name": "bread"
+      }
+    ]
+  },
+  {
+    "storename": "Los Angeles - Pasadena",
+    "name": "Cap. Spork",
+    "image": "hamb2.png",
+	"price": 3.5,
+    "items": [
+      {
+        "name": "pork"
+      },
+      {
+        "name": "mustard"
+      },
+      {
+        "name": "whole bread"
+      }
+    ]
+  },
+  {
+    "storename": "Los Angeles - Pasadena",
+    "name": "Beef Turner",
+    "image": "hamb3.png",
+	"price": 4.0,	
+    "items": [
+      {
+        "name": "beef"
+      },
+      {
+        "name": "mustard"
+      },
+      {
+        "name": "bread"
+      }
+    ]
+  },
+  {
+    "storename": "Los Angeles - Pasadena",
+    "name": "The Big Bang Meal",
+    "image": "hamb4.png",
+	"price": 6.5,	
+    "items": [
+      {
+        "name": "beef"
+      },
+      {
+        "name": "mustard"
+      },
+      {
+        "name": "bread"
+      },
+      {
+        "name": "beef"
+      },
+      {
+        "name": "ketchup"
+      },
+      {
+        "name": "bread"
+      }
+    ]
+  },
+  {
+    "storename": "Los Angeles - Pasadena",
+    "name": "Out of this World",
+    "image": "hamb5.png",
+	"price": 4.0,
+    "items": [
+      {
+        "name": "salmon"
+      },
+      {
+        "name": "onion wings"
+      },
+      {
+        "name": "whole bread"
+      }
+    ]
+  },
+  {
+    "storename": "Los Angeles - Beverly Hills",
+    "name": "Darth Bacon",
+    "image": "hamb1.png",
+	"price": 2.5,	
+    "items": [
+      {
+        "name": "beef"
+      },
+      {
+        "name": "ketchup"
+      },
+      {
+        "name": "bread"
+      }
+    ]
+  },
+  {
+    "storename": "Los Angeles - Beverly Hills",
+    "name": "Cap. Spork",
+    "image": "hamb2.png",
+	"price": 5.0,	
+    "items": [
+      {
+        "name": "pork"
+      },
+      {
+        "name": "mustard"
+      },
+      {
+        "name": "whole bread"
+      }
+    ]
+  },
+  {
+    "storename": "Los Angeles - Beverly Hills",
+    "name": "Beef Turner",
+    "image": "hamb3.png",
+	"price": 5.5,	
+    "items": [
+      {
+        "name": "beef"
+      },
+      {
+        "name": "mustard"
+      },
+      {
+        "name": "bread"
+      }
+    ]
+  },
+  {
+    "storename": "Los Angeles - Beverly Hills",
+    "name": "The Big Bang Meal",
+    "image": "hamb4.png",
+	"price": 8.5,
+    "items": [
+      {
+        "name": "beef"
+      },
+      {
+        "name": "mustard"
+      },
+      {
+        "name": "bread"
+      },
+      {
+        "name": "beef"
+      },
+      {
+        "name": "ketchup"
+      },
+      {
+        "name": "bread"
+      }
+    ]
+  },
+  {
+    "storename": "Los Angeles - Beverly Hills",
+    "name": "Out of this World",
+    "image": "hamb5.png",
+	"price": 5.5,	
+    "items": [
+      {
+        "name": "salmon"
+      },
+      {
+        "name": "onion wings"
+      },
+      {
+        "name": "whole bread"
+      }
+    ]
+  },
+
+  {
+    "storename": "Los Angeles - Beverly Hills",
+    "name": "Run to the Hills",
+    "image": "hamb6.png",
+	"price": 4.5,	
+    "items": [
+      {
+        "name": "chicken"
+      },
+      {
+        "name": "tomato"
+      },
+      {
+        "name": "whole bread"
+      }
+    ]
+  }
 ]

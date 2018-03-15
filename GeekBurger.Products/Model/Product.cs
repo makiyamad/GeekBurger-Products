@@ -16,5 +16,6 @@ namespace GeekBurger.Products.Model
         public string Image { get; set; }
         public ICollection<Item> Items { get; set; }
             = new List<Item>();
+        public decimal Price { get; set; }
     }
 }

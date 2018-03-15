@@ -1,62 +1,257 @@
 [
     {
-        "storeId": "8048e9ec-80fe-4bad-bc2a-e4f4a75c834e",
-        "productId": "c7a85031-fd7a-4547-8309-05e6f770685d",
-        "name": "Darth Bacon",
-        "image": "hamb1.png",
-        "items": [
-            {
-                "itemId": "2a96dcba-8fb1-479d-8355-54e8d4c43fd9",
-                "name": "beef"
-            },
-            {
-                "itemId": "cfc9d720-6924-4503-bb82-0560e09ab57e",
-                "name": "ketchup"
-            },
-            {
-                "itemId": "dc821f3f-de83-49b1-8f5e-0f3975b97ffc",
-                "name": "bread"
-            }
-        ]
-    },
-    {
-        "storeId": "8048e9ec-80fe-4bad-bc2a-e4f4a75c834e",
-        "productId": "e7d6d551-487a-48cf-87bf-21a61a234019",
-        "name": "Cap. Spork",
-        "image": "hamb2.png",
-        "items": [
-            {
-                "itemId": "2ff5a192-85ea-4ce6-91a4-9b4c84bb0448",
-                "name": "pork"
-            },
-            {
-                "itemId": "29ba7251-0338-41be-aef5-e2b5c1c8fbb2",
-                "name": "mustard"
-            },
-            {
-                "itemId": "31d90388-609a-4c72-bafa-b06891c4f825",
-                "name": "whole bread"
-            }
-        ]
-    },
-    {
         "storeId": "8d618778-85d7-411e-878b-846a8eef30c0",
-        "productId": "7d28fe9e-6790-416a-84c3-1f680a8922bf",
+        "productId": "0d61770a-9c75-4922-a1bd-b1b853a7e04c",
         "name": "Beef Turner",
         "image": "hamb3.png",
         "items": [
             {
-                "itemId": "939539b7-38f0-44bb-ad99-a31d3cecce45",
+                "itemId": "95c746a9-d2e2-489b-9edf-1df502aa21df",
                 "name": "beef"
             },
             {
-                "itemId": "9feca903-9b97-4b71-a99a-a0bdd5cf9b9f",
+                "itemId": "04b079d8-4853-43d7-804b-dfef39859bb5",
                 "name": "mustard"
             },
             {
-                "itemId": "7dde88f7-5b43-4907-84d0-2e6a1c2d647f",
+                "itemId": "301aa3e5-e62f-4cc0-8514-b5d5260cb40c",
                 "name": "bread"
             }
-        ]
-    }	
+        ],
+        "price": 5.5
+    },
+    {
+        "storeId": "8d618778-85d7-411e-878b-846a8eef30c0",
+        "productId": "85773fae-1738-46ff-be07-97516db9c31e",
+        "name": "Cap. Spork",
+        "image": "hamb2.png",
+        "items": [
+            {
+                "itemId": "84dd19ab-015c-4c6b-af2a-06024849c7b4",
+                "name": "pork"
+            },
+            {
+                "itemId": "b73a6ce2-901e-44da-b331-6860dde497dc",
+                "name": "mustard"
+            },
+            {
+                "itemId": "1c85cb23-8f51-45da-be69-076b90bf0161",
+                "name": "whole bread"
+            }
+        ],
+        "price": 5
+    },
+    {
+        "storeId": "8d618778-85d7-411e-878b-846a8eef30c0",
+        "productId": "953be57a-55a0-48e7-a8d1-adf6584db5c4",
+        "name": "Darth Bacon",
+        "image": "hamb1.png",
+        "items": [
+            {
+                "itemId": "75fbf72a-253d-4859-8209-4d603d52cb1d",
+                "name": "beef"
+            },
+            {
+                "itemId": "15cb067a-1890-428e-ba60-700592106e02",
+                "name": "ketchup"
+            },
+            {
+                "itemId": "6f8e0b62-612d-4a49-915a-8f3d4dcaf058",
+                "name": "bread"
+            }
+        ],
+        "price": 2.5
+    },
+    {
+        "storeId": "8d618778-85d7-411e-878b-846a8eef30c0",
+        "productId": "aef6ec61-c973-4e65-980f-340cb7081206",
+        "name": "Run to the Hills",
+        "image": "hamb6.png",
+        "items": [
+            {
+                "itemId": "cf61753e-72ca-4c29-baca-af99105f06e8",
+                "name": "chicken"
+            },
+            {
+                "itemId": "d014189d-0ec3-4ddb-9a3e-5a24e52e276e",
+                "name": "tomato"
+            },
+            {
+                "itemId": "a7c0f5f7-27b8-4d8e-8303-0fdf13b52a4d",
+                "name": "whole bread"
+            }
+        ],
+        "price": 4.5
+    },
+    {
+        "storeId": "8d618778-85d7-411e-878b-846a8eef30c0",
+        "productId": "d88509d1-4681-4277-be6d-41d5c6563dc0",
+        "name": "Out of this World",
+        "image": "hamb5.png",
+        "items": [
+            {
+                "itemId": "30615bad-64f0-4eff-8ad4-bd0b781f96f9",
+                "name": "salmon"
+            },
+            {
+                "itemId": "769002aa-bd39-49e8-9c27-71142deefefe",
+                "name": "onion wings"
+            },
+            {
+                "itemId": "db7481f1-1528-40d8-abcd-73b2ed3535ef",
+                "name": "whole bread"
+            }
+        ],
+        "price": 5.5
+    },
+    {
+        "storeId": "8d618778-85d7-411e-878b-846a8eef30c0",
+        "productId": "ea7b7349-8622-4fee-ab8d-d239cf025ede",
+        "name": "The Big Bang Meal",
+        "image": "hamb4.png",
+        "items": [
+            {
+                "itemId": "b8dbe685-3a74-4c9d-b4b7-93fc8e7cdc35",
+                "name": "beef"
+            },
+            {
+                "itemId": "beedb9f8-cda0-4f97-8f62-b88f3967d0cb",
+                "name": "mustard"
+            },
+            {
+                "itemId": "314c5885-730b-45b2-88e7-dbdae1f945a0",
+                "name": "bread"
+            },
+            {
+                "itemId": "f1c8f27c-81f2-43f4-8086-1ffe741b1c00",
+                "name": "beef"
+            },
+            {
+                "itemId": "bac25201-c368-429d-bfbd-538261c5e834",
+                "name": "ketchup"
+            },
+            {
+                "itemId": "4a37ba71-4ea4-48d5-921b-889976ec0f6f",
+                "name": "bread"
+            }
+        ],
+        "price": 8.5
+    },
+    {
+        "storeId": "8048e9ec-80fe-4bad-bc2a-e4f4a75c834e",
+        "productId": "2b5f5210-180f-4452-803c-02bf8812bb13",
+        "name": "Out of this World",
+        "image": "hamb5.png",
+        "items": [
+            {
+                "itemId": "e0c40f8b-6cc1-4c42-8b64-7a48e0590b2d",
+                "name": "salmon"
+            },
+            {
+                "itemId": "3fd2520e-3e12-4138-a81f-1df63573a698",
+                "name": "onion wings"
+            },
+            {
+                "itemId": "866296eb-1adb-418a-a136-7efc786406b7",
+                "name": "whole bread"
+            }
+        ],
+        "price": 4
+    },
+    {
+        "storeId": "8048e9ec-80fe-4bad-bc2a-e4f4a75c834e",
+        "productId": "a935f228-da9d-4561-aada-edd735f623e6",
+        "name": "Darth Bacon",
+        "image": "hamb1.png",
+        "items": [
+            {
+                "itemId": "0bc6a776-f4a7-4815-9fbd-0e9a99e485b8",
+                "name": "beef"
+            },
+            {
+                "itemId": "80bbca18-3636-4594-8266-b7f9fcab1e32",
+                "name": "ketchup"
+            },
+            {
+                "itemId": "d7d8b71e-b940-4b88-af27-043bcafa6424",
+                "name": "bread"
+            }
+        ],
+        "price": 2.5
+    },
+    {
+        "storeId": "8048e9ec-80fe-4bad-bc2a-e4f4a75c834e",
+        "productId": "ced03b20-1795-45c5-9333-6e0b059a1fcb",
+        "name": "Beef Turner",
+        "image": "hamb3.png",
+        "items": [
+            {
+                "itemId": "2871618f-8baf-49d2-8cfa-bd46f5c36665",
+                "name": "beef"
+            },
+            {
+                "itemId": "25a42a20-a10a-40f6-a684-f61793c6a52f",
+                "name": "mustard"
+            },
+            {
+                "itemId": "271928aa-b22c-499b-b8f9-8a6d6f6a7959",
+                "name": "bread"
+            }
+        ],
+        "price": 4
+    },
+    {
+        "storeId": "8048e9ec-80fe-4bad-bc2a-e4f4a75c834e",
+        "productId": "eee2c38c-d9d0-47ea-8003-e4fe7d33fca8",
+        "name": "The Big Bang Meal",
+        "image": "hamb4.png",
+        "items": [
+            {
+                "itemId": "6ed2de74-2bdb-44a6-bd40-90a56ee0e5d3",
+                "name": "beef"
+            },
+            {
+                "itemId": "18deb754-fbd8-4af0-a570-0e9ff674fd3f",
+                "name": "mustard"
+            },
+            {
+                "itemId": "4b97a96c-38f1-468a-85d6-5e39b6175706",
+                "name": "bread"
+            },
+            {
+                "itemId": "d8cd9791-213e-412b-ad99-a8708fedd7c6",
+                "name": "beef"
+            },
+            {
+                "itemId": "7aac5360-a644-4ec4-b4ce-3ebec3f42f8c",
+                "name": "ketchup"
+            },
+            {
+                "itemId": "20edc3b1-d6fb-47c8-9346-239e11d996ae",
+                "name": "bread"
+            }
+        ],
+        "price": 6.5
+    },
+    {
+        "storeId": "8048e9ec-80fe-4bad-bc2a-e4f4a75c834e",
+        "productId": "f2944952-7eff-4b4b-8389-25146cea63ab",
+        "name": "Cap. Spork",
+        "image": "hamb2.png",
+        "items": [
+            {
+                "itemId": "69b08186-927f-459f-97ef-fb04447c1c6d",
+                "name": "pork"
+            },
+            {
+                "itemId": "f8388d98-72df-4a8d-9dd0-9eb290eb2e87",
+                "name": "mustard"
+            },
+            {
+                "itemId": "60353037-6be9-4140-ad37-fe5f2a30aa41",
+                "name": "whole bread"
+            }
+        ],
+        "price": 3.5
+    }
 ]
