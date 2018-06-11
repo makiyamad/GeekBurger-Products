@@ -5,7 +5,12 @@
     <ApplicationIcon />
     <Win32Resource />
     <NoWin32Manifest>true</NoWin32Manifest>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Properties\PublishProfiles\GeekBurger-Products - Web Deploy.pubxml" />
+  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\" />

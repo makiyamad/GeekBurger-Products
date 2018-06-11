@@ -232,26 +232,5 @@
             }
         ],
         "price": 6.5
-    },
-    {
-        "storeId": "8048e9ec-80fe-4bad-bc2a-e4f4a75c834e",
-        "productId": "f2944952-7eff-4b4b-8389-25146cea63ab",
-        "name": "Cap. Spork",
-        "image": "hamb2.png",
-        "items": [
-            {
-                "itemId": "69b08186-927f-459f-97ef-fb04447c1c6d",
-                "name": "pork"
-            },
-            {
-                "itemId": "f8388d98-72df-4a8d-9dd0-9eb290eb2e87",
-                "name": "mustard"
-            },
-            {
-                "itemId": "60353037-6be9-4140-ad37-fe5f2a30aa41",
-                "name": "whole bread"
-            }
-        ],
-        "price": 3.5
     }
 ]
