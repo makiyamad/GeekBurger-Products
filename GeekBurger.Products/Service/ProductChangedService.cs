@@ -19,7 +19,7 @@ namespace GeekBurger.Products.Service
 {
     public class ProductChangedService : IProductChangedService
     {
-        private const string Topic = "ProductChangedTopic";
+        private const string Topic = "ProductChanged";
         private IConfiguration _configuration;
         private IMapper _mapper;
         private List<Message> _messages;
