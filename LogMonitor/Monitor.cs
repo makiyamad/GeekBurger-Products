@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using GeekBurger.Products.Contract;
+using Microsoft.Azure.Management.ServiceBus.Fluent;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -12,24 +12,16 @@ using SubscriptionClient = Microsoft.Azure.ServiceBus.SubscriptionClient;
 
 namespace Topic.Receiver.Sample
 {
-    class Program
+    public class Monitor
     {
-        private const string TopicName = "ProductChanged";
+        private string TopicName = "log";
         private static IConfiguration _configuration;
         private static ServiceBusConfiguration serviceBusConfiguration;
-        private static string _storeId;
-        private const string SubscriptionName = "Los_Angeles_Pasadena_store";
+        private const string SubscriptionName = "Monitor";
 
-        static void Main(string[] args)
+        public void Init(string topicName)
         {
-            if (args.Length <= 0)
-            {
-                Console.WriteLine("Inform storeId and hit enter to get productChange messages");
-                _storeId = Console.ReadLine();
-            }
-            else
-                _storeId = args[0];
-
+            TopicName = topicName;
             //https://github.com/Azure-Samples/service-bus-dotnet-manage-publish-subscribe-with-basic-features
 
             _configuration = new ConfigurationBuilder()
@@ -41,9 +33,20 @@ namespace Topic.Receiver.Sample
 
             var serviceBusNamespace = _configuration.GetServiceBusNamespace();
 
-            var topic = serviceBusNamespace.Topics.GetByName(TopicName);
+            ITopic topic = null;
+            try
+            {
+                topic = serviceBusNamespace.Topics.GetByName(topicName);
+            }
+            catch (Exception)
+            {
+                serviceBusNamespace.Topics.Define(topicName).Create();
+            }
 
+            try { 
             topic.Subscriptions.DeleteByName(SubscriptionName);
+            }
+            catch (Exception) { }
 
             if (!topic.Subscriptions.List()
                    .Any(subscription => subscription.Name
@@ -57,36 +60,31 @@ namespace Topic.Receiver.Sample
             Console.ReadLine();
         }
 
-        private static async void ReceiveMessages()
+        private void ReceiveMessages()
         {
             var subscriptionClient = new SubscriptionClient(serviceBusConfiguration.ConnectionString, TopicName, SubscriptionName);
-
-            //by default a 1=1 rule is added when subscription is created, so we need to remove it
-            await subscriptionClient.RemoveRuleAsync("$Default");
-
-            await subscriptionClient.AddRuleAsync(new RuleDescription
-            {
-                Filter = new CorrelationFilter { Label = _storeId },
-                Name = "filter-store"
-            });
 
             var mo = new MessageHandlerOptions(ExceptionHandle) { AutoComplete = true };
 
             subscriptionClient.RegisterMessageHandler(Handle, mo);
-            
+
             Console.ReadLine();
         }
 
         private static Task Handle(Message message, CancellationToken arg2)
         {
-            Console.WriteLine($"message Label: {message.Label}");
-            Console.WriteLine($"message CorrelationId: {message.CorrelationId}");
+            var label = message.Label;
+            if (message.Body == null) { 
+                Console.WriteLine($"{label}-empty message");
+
+            }
+            else { 
+
             var productChangesString = Encoding.UTF8.GetString(message.Body);
 
-            Console.WriteLine("Message Received");
-            Console.WriteLine(productChangesString);
+            Console.WriteLine($"{label}-{productChangesString}");
+            }
 
-            //Thread.Sleep(40000);
 
             return Task.CompletedTask;
         }
