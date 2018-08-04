@@ -14,7 +14,7 @@ namespace Topic.Receiver.Sample
 {
     class Program
     {
-        private const string TopicName = "ProductChangedTopic";
+        private const string TopicName = "ProductChanged";
         private static IConfiguration _configuration;
         private static ServiceBusConfiguration serviceBusConfiguration;
         private static string _storeId;
