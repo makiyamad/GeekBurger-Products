@@ -17,21 +17,20 @@ using System.Threading.Tasks;
 
 namespace GeekBurger.Products.Service
 {
-    public class ProductChangedService : IProductChangedService
+    public class LogService : ILogService
     {
-        private const string Topic = "ProductChangedTopic";
+        private const string MicroService = "Products";
+        private const string Topic = "Log";
         private IConfiguration _configuration;
         private IMapper _mapper;
         private List<Message> _messages;
         private Task _lastTask;
         private IServiceBusNamespace _namespace;
-        private ILogService _logService;
 
-        public ProductChangedService(IMapper mapper, IConfiguration configuration, ILogService logService)
+        public LogService(IMapper mapper, IConfiguration configuration)
         {
             _mapper = mapper;
             _configuration = configuration;
-            _logService = logService;
             _messages = new List<Message>();
             _namespace = _configuration.GetServiceBusNamespace();
             EnsureTopicIsCreated();
@@ -47,38 +46,28 @@ namespace GeekBurger.Products.Service
 
         }
 
-        public void AddToMessageList(IEnumerable<EntityEntry<Product>> changes)
+        public Message GetMessage(string message)
         {
-            _messages.AddRange(changes
-            .Where(entity => entity.State != EntityState.Detached
-                    && entity.State != EntityState.Unchanged)
-            .Select(GetMessage).ToList());
-        }
-
-        public Message GetMessage(EntityEntry<Product> entity)
-        {
-            var productChanged = Mapper.Map<ProductChangedMessage>(entity);
-            var productChangedSerialized = JsonConvert.SerializeObject(productChanged);
-            var productChangedByteArray = Encoding.UTF8.GetBytes(productChangedSerialized);
+            var productChangedByteArray = Encoding.UTF8.GetBytes(message);
 
             return new Message
             {
                 Body = productChangedByteArray,
                 MessageId = Guid.NewGuid().ToString(),
-                Label = productChanged.Product.StoreId.ToString()
+                Label = MicroService
             };
         }
 
-        public async void SendMessagesAsync()
+        public async void SendMessagesAsync(string message)
         {
+            _messages.Add(GetMessage(message));
+
             if (_lastTask != null && !_lastTask.IsCompleted)
                 return;
 
             var config = _configuration.GetSection("serviceBus").Get<ServiceBusConfiguration>();
             var topicClient = new TopicClient(config.ConnectionString, Topic);
-
-            _logService.SendMessagesAsync("Product was changed");
-
+            
             _lastTask = SendAsync(topicClient);
 
             await _lastTask;

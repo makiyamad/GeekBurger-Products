@@ -40,6 +40,7 @@ namespace GeekBurger.Products
             services.AddScoped<IProductsRepository, ProductsRepository>();
             services.AddScoped<IStoreRepository, StoreRepository>();
             services.AddSingleton<IProductChangedService, ProductChangedService>();
+            services.AddSingleton<ILogService, LogService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
