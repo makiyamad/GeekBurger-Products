@@ -7,21 +7,22 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Management.ServiceBus.Fluent;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
+using Topic.Receiver.Sample;
 using SubscriptionClient = Microsoft.Azure.ServiceBus.SubscriptionClient;
 
-namespace Topic.Receiver.Sample
+namespace LogMonitor
 {
-    public class Monitor
+    public class Monitor : IDisposable
     {
-        private string TopicName = "log";
+        private string _topicName = "log";
         private static IConfiguration _configuration;
-        private static ServiceBusConfiguration serviceBusConfiguration;
+        private static ServiceBusConfiguration _serviceBusConfiguration;
         private const string SubscriptionName = "Monitor";
+        private SubscriptionClient _subscriptionClient;
 
         public void Init(string topicName)
         {
-            TopicName = topicName;
+            _topicName = topicName;
             //https://github.com/Azure-Samples/service-bus-dotnet-manage-publish-subscribe-with-basic-features
 
             _configuration = new ConfigurationBuilder()
@@ -29,7 +30,7 @@ namespace Topic.Receiver.Sample
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            serviceBusConfiguration = _configuration.GetSection("serviceBus").Get<ServiceBusConfiguration>();
+            _serviceBusConfiguration = _configuration.GetSection("serviceBus").Get<ServiceBusConfiguration>();
 
             var serviceBusNamespace = _configuration.GetServiceBusNamespace();
 
@@ -43,46 +44,44 @@ namespace Topic.Receiver.Sample
                 serviceBusNamespace.Topics.Define(topicName).Create();
             }
 
-            try { 
-            topic.Subscriptions.DeleteByName(SubscriptionName);
+            try
+            {
+                topic?.Subscriptions.DeleteByName(SubscriptionName);
             }
             catch (Exception) { }
 
-            if (!topic.Subscriptions.List()
-                   .Any(subscription => subscription.Name
-                       .Equals(SubscriptionName, StringComparison.InvariantCultureIgnoreCase)))
+            if (topic != null && !topic.Subscriptions.List()
+                    .Any(subscription => subscription.Name
+                        .Equals(SubscriptionName, StringComparison.InvariantCultureIgnoreCase)))
                 topic.Subscriptions
                     .Define(SubscriptionName)
                     .Create();
 
             ReceiveMessages();
-
-            Console.ReadLine();
         }
 
         private void ReceiveMessages()
         {
-            var subscriptionClient = new SubscriptionClient(serviceBusConfiguration.ConnectionString, TopicName, SubscriptionName);
+            _subscriptionClient = new SubscriptionClient(_serviceBusConfiguration.ConnectionString, _topicName, SubscriptionName);
 
             var mo = new MessageHandlerOptions(ExceptionHandle) { AutoComplete = true };
 
-            subscriptionClient.RegisterMessageHandler(Handle, mo);
-
-            Console.ReadLine();
+            _subscriptionClient.RegisterMessageHandler(Handle, mo);
         }
 
         private static Task Handle(Message message, CancellationToken arg2)
         {
             var label = message.Label;
-            if (message.Body == null) { 
+            if (message.Body == null)
+            {
                 Console.WriteLine($"{label}-empty message");
 
             }
-            else { 
+            else
+            {
+                var productChangesString = Encoding.UTF8.GetString(message.Body);
 
-            var productChangesString = Encoding.UTF8.GetString(message.Body);
-
-            Console.WriteLine($"{label}-{productChangesString}");
+                Console.WriteLine($"{label}-{productChangesString}");
             }
 
 
@@ -95,6 +94,11 @@ namespace Topic.Receiver.Sample
             var context = arg.ExceptionReceivedContext;
             Console.WriteLine($"- Endpoint: {context.Endpoint}, Path: {context.EntityPath}, Action: {context.Action}");
             return Task.CompletedTask;
+        }
+
+        public async void Dispose()
+        {
+            await _subscriptionClient.CloseAsync();
         }
     }
 }
