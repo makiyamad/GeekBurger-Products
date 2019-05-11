@@ -10,34 +10,33 @@ using Newtonsoft.Json;
 
 namespace GeekBurger.Products.Repository
 {
-
     public class ProductsRepository : IProductsRepository
     {
-        private ProductsContext _context;
+        private ProductsDbContext _dbContext;
         private IProductChangedService _productChangedService;
 
-        public ProductsRepository(ProductsContext context, IProductChangedService productChangedService)
+        public ProductsRepository(ProductsDbContext dbContext, IProductChangedService productChangedService)
         {
-            _context = context;
+            _dbContext = dbContext;
             _productChangedService = productChangedService;
         }
 
         public Product GetProductById(Guid productId)
         {
-            return _context.Products?
+            return _dbContext.Products?
                 .Include(product => product.Items)
                 .FirstOrDefault(product => product.ProductId == productId);
         }
 
         public List<Item> GetFullListOfItems()
         {
-            return _context.Items.ToList();
+            return _dbContext.Items.ToList();
         }
 
         public bool Add(Product product)
         {
             product.ProductId = Guid.NewGuid();
-            _context.Products.Add(product);
+            _dbContext.Products.Add(product);
             return true;
         }
 
@@ -48,7 +47,7 @@ namespace GeekBurger.Products.Repository
 
         public IEnumerable<Product> GetProductsByStoreName(string storeName)
         {
-            var products = _context.Products?
+            var products = _dbContext.Products?
                 .Where(product =>
                     product.Store.Name.Equals(storeName,
                     StringComparison.InvariantCultureIgnoreCase))
@@ -59,23 +58,17 @@ namespace GeekBurger.Products.Repository
 
         public void Delete(Product product)
         {
-            _context.Products.Remove(product);
+            _dbContext.Products.Remove(product);
         }
 
         public void Save()
         {
             _productChangedService
-                .AddToMessageList(_context.ChangeTracker.Entries<Product>());
+                .AddToMessageList(_dbContext.ChangeTracker.Entries<Product>());
 
-            _context.SaveChanges();
+            _dbContext.SaveChanges();
 
             _productChangedService.SendMessagesAsync();
         }
-    }
-
-    public class ProductChanged
-    {
-        public EntityState State { get; set; }
-        public Product Product { get; set; }
     }
 }

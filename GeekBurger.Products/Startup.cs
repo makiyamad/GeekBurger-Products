@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using GeekBurger.Products.Extension;
 using GeekBurger.Products.Helper;
 using GeekBurger.Products.Repository;
 using GeekBurger.Products.Service;
@@ -17,10 +18,12 @@ namespace GeekBurger.Products
     public class Startup
     {
         public static IConfiguration Configuration;
+        public IHostingEnvironment HostingEnvironment;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
+            HostingEnvironment = env;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -36,17 +39,25 @@ namespace GeekBurger.Products
 
             services.AddAutoMapper();
 
-            services.AddDbContext<ProductsContext>(o => o.UseInMemoryDatabase("geekburger-products"));
+            var databasePath = "%DATABASEPATH%";
+            var connection = Configuration.GetConnectionString("sql")
+                .Replace(databasePath, HostingEnvironment.ContentRootPath);
+
+            services.AddEntityFrameworkSqlite()
+                .AddDbContext<ProductsDbContext>(o => o.UseSqlite(connection));
+
             services.AddScoped<IProductsRepository, ProductsRepository>();
+            services.AddScoped<IProductChangedEventRepository, ProductChangedEventRepository>();
             services.AddScoped<IStoreRepository, StoreRepository>();
             services.AddSingleton<IProductChangedService, ProductChangedService>();
+
             services.AddSingleton<ILogService, LogService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ProductsContext productsContext)
+        public void Configure(IApplicationBuilder app, ProductsDbContext productsDbContext)
         {
-            if (env.IsDevelopment())
+            if (HostingEnvironment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -60,7 +71,16 @@ namespace GeekBurger.Products
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
 
-            productsContext.Seed();
+            using (var serviceScope = app
+                .ApplicationServices
+                .GetService<IServiceScopeFactory>()
+                .CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<ProductsDbContext>();
+                context.Database.EnsureCreated();
+            }
+
+            productsDbContext.Seed();
         }
     }
 }

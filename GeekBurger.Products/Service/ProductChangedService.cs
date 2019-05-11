@@ -14,27 +14,32 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GeekBurger.Products.Service
 {
     public class ProductChangedService : IProductChangedService
     {
         private const string Topic = "ProductChanged";
-        private IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
         private IMapper _mapper;
-        private List<Message> _messages;
+        private readonly List<Message> _messages;
         private Task _lastTask;
-        private IServiceBusNamespace _namespace;
-        private ILogService _logService;
+        private readonly IServiceBusNamespace _namespace;
+        private readonly ILogService _logService;
+        private CancellationTokenSource _cancelMessages;
+        private IServiceProvider _serviceProvider { get; }
 
-        public ProductChangedService(IMapper mapper, IConfiguration configuration, ILogService logService)
+        public ProductChangedService(IMapper mapper, 
+            IConfiguration configuration, ILogService logService, IServiceProvider serviceProvider)
         {
             _mapper = mapper;
             _configuration = configuration;
             _logService = logService;
             _messages = new List<Message>();
             _namespace = _configuration.GetServiceBusNamespace();
-            EnsureTopicIsCreated();
+            _cancelMessages = new CancellationTokenSource();
+            _serviceProvider = serviceProvider;
         }
 
         public void EnsureTopicIsCreated()
@@ -55,16 +60,41 @@ namespace GeekBurger.Products.Service
             .Select(GetMessage).ToList());
         }
 
+        private void AddOrUpdateEvent(ProductChangedEvent productChangedEvent)
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var scopedProcessingService =
+                    scope.ServiceProvider
+                        .GetRequiredService<IProductChangedEventRepository>();
+
+                ProductChangedEvent evt;
+                if (productChangedEvent.EventId == Guid.Empty 
+                    || (evt = scopedProcessingService.Get(productChangedEvent.EventId)) == null)
+                    scopedProcessingService.Add(productChangedEvent);
+                else
+                {
+                    evt.MessageSent = true;
+                    scopedProcessingService.Update(evt);
+                }
+
+                scopedProcessingService.Save();
+            }
+        }
+
         public Message GetMessage(EntityEntry<Product> entity)
         {
             var productChanged = Mapper.Map<ProductChangedMessage>(entity);
             var productChangedSerialized = JsonConvert.SerializeObject(productChanged);
             var productChangedByteArray = Encoding.UTF8.GetBytes(productChangedSerialized);
 
+            var productChangedEvent = Mapper.Map<ProductChangedEvent>(entity);
+            AddOrUpdateEvent(productChangedEvent);
+
             return new Message
             {
                 Body = productChangedByteArray,
-                MessageId = Guid.NewGuid().ToString(),
+                MessageId = productChangedEvent.EventId.ToString(),
                 Label = productChanged.Product.StoreId.ToString()
             };
         }
@@ -79,7 +109,7 @@ namespace GeekBurger.Products.Service
 
             _logService.SendMessagesAsync("Product was changed");
 
-            _lastTask = SendAsync(topicClient);
+            _lastTask = SendAsync(topicClient, _cancelMessages.Token);
 
             await _lastTask;
 
@@ -88,15 +118,16 @@ namespace GeekBurger.Products.Service
             HandleException(closeTask);
         }
 
-        public async Task SendAsync(TopicClient topicClient)
+        public async Task SendAsync(TopicClient topicClient, 
+            CancellationToken cancellationToken)
         {
-            int tries = 0;
-            Message message;
-            while (true)
+            var tries = 0;
+            while (!cancellationToken.IsCancellationRequested)
             {
                 if (_messages.Count <= 0)
                     break;
 
+                Message message;
                 lock (_messages)
                 {
                     message = _messages.FirstOrDefault();
@@ -107,9 +138,16 @@ namespace GeekBurger.Products.Service
                 var success = HandleException(sendTask);
 
                 if (!success)
-                    Thread.Sleep(10000 * (tries < 60 ? tries++ : tries));
+                {
+                    var cancelled = cancellationToken.WaitHandle.WaitOne(10000 * (tries < 60 ? tries++ : tries));
+                    if (cancelled) break;
+                }
                 else
+                {
+                    if (message == null) continue;
+                    AddOrUpdateEvent(new ProductChangedEvent() {EventId = new Guid(message.MessageId)});
                     _messages.Remove(message);
+                }
             }
         }
 
@@ -126,6 +164,20 @@ namespace GeekBurger.Products.Service
             });
 
             return false;
+        }
+
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            EnsureTopicIsCreated();
+            
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            _cancelMessages.Cancel();
+
+            return Task.CompletedTask;
         }
     }
 }

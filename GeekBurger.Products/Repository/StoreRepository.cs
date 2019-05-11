@@ -8,9 +8,9 @@ namespace GeekBurger.Products.Repository
 {
     public class StoreRepository : IStoreRepository
     {
-        private ProductsContext _context { get; set; }
+        private ProductsDbContext _context { get; set; }
 
-        public StoreRepository(ProductsContext context)
+        public StoreRepository(ProductsDbContext context)
         {
             _context = context;
         }

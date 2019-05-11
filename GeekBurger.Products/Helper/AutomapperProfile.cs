@@ -16,6 +16,8 @@ namespace GeekBurger.Products
             CreateMap<Item, ItemToGet>();
             CreateMap<EntityEntry<Product>, ProductChangedMessage>()
             .ForMember(dest => dest.Product, opt => opt.MapFrom(src => src.Entity));
+            CreateMap<EntityEntry<Product>, ProductChangedEvent>()
+            .ForMember(dest => dest.Product, opt => opt.MapFrom(src => src.Entity));
         }
     }
 }
