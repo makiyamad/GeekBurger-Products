@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="GeekBurger.Products.Contract" Version="1.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.9" />
     <PackageReference Include="Microsoft.Azure.Management.ServiceBus" Version="1.0.3" />
     <PackageReference Include="Microsoft.Azure.Management.ServiceBus.Fluent" Version="1.6.0" />
     <PackageReference Include="Microsoft.Azure.ServiceBus" Version="2.0.0" />
